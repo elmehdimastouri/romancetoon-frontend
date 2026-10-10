@@ -8,10 +8,20 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/'],
-        // NOTE: /search is intentionally allowed to crawl so that
-        // search engines read the <meta name="robots" content="noindex, follow" />
-        // directive and prevent URL-only indexing artifacts.
+        disallow: [
+          '/api/',
+          '/_next/',
+          '/library',
+        ],
+      },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: [
+          '/api/',
+          '/_next/',
+          '/library',
+        ],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

@@ -4,6 +4,7 @@ import { MangaCard } from '@/components/manga/MangaCard';
 import { Sparkles, Flame, Clock, ArrowRight } from 'lucide-react';
 
 import { MangaSummary } from '@/types/manga';
+import { generateHomeJsonLd } from '@/lib/seo';
 
 export const revalidate = 120; // 2 minutes ISR
 
@@ -22,8 +23,15 @@ export default async function HomePage() {
     // Graceful fallback for initial zero-data states
   }
 
+  const homeJsonLd = generateHomeJsonLd();
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 space-y-16">
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-surface-card via-surface to-rose-dark/30 border border-surface-border p-8 md:p-12 shadow-2xl">
         <div className="max-w-2xl space-y-4">
