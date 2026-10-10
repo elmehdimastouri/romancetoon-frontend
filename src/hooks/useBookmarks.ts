@@ -42,9 +42,17 @@ export function useBookmarks() {
     } catch {}
   };
 
+  const removeBookmark = (slug: string) => {
+    try {
+      const updated = bookmarks.filter((b) => b.mangaSlug !== slug);
+      setBookmarks(updated);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    } catch {}
+  };
+
   const isBookmarked = (slug: string) => {
     return bookmarks.some((b) => b.mangaSlug === slug);
   };
 
-  return { bookmarks, isLoaded, toggleBookmark, isBookmarked };
+  return { bookmarks, isLoaded, toggleBookmark, removeBookmark, isBookmarked };
 }

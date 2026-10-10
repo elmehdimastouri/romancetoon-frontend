@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ChapterDetail } from '@/types/chapter';
+import { MangaSummary } from '@/types/manga';
+import { MangaCard } from '@/components/manga/MangaCard';
 import { useReadingHistory } from '@/hooks/useReadingHistory';
 import { useBookmarks } from '@/hooks/useBookmarks';
-import { ChevronLeft, ChevronRight, Bookmark, ArrowUp, RefreshCw, BookOpen } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, ArrowUp, RefreshCw, BookOpen, Sparkles } from 'lucide-react';
 
 interface ContinuousReaderProps {
   chapter: ChapterDetail;
+  relatedManga?: MangaSummary[];
 }
 
-export function ContinuousReader({ chapter }: ContinuousReaderProps) {
+export function ContinuousReader({ chapter, relatedManga = [] }: ContinuousReaderProps) {
   const { recordChapter } = useReadingHistory();
   const { toggleBookmark, isBookmarked } = useBookmarks();
   const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
@@ -149,6 +152,25 @@ export function ContinuousReader({ chapter }: ContinuousReaderProps) {
           )}
         </div>
       </div>
+
+      {/* Recommended Romance Manhwa at End of Chapter */}
+      {relatedManga && relatedManga.length > 0 && (
+        <div className="mx-auto max-w-4xl my-16 px-4 pt-8 border-t border-surface-border/60">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-accent/15 text-rose-accent">
+              <Sparkles className="w-4 h-4" />
+            </span>
+            <h4 className="font-serif text-xl font-bold text-text-main">
+              You May Also Like
+            </h4>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {relatedManga.map((m) => (
+              <MangaCard key={m.id} manga={m} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Floating Bottom Navigation Bar */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-full border border-surface-border bg-surface/90 px-4 py-2 shadow-2xl backdrop-blur-md">

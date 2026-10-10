@@ -3,14 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, Bookmark, BookOpen, Flame } from 'lucide-react';
+import { Search, Bookmark, BookOpen, Flame, History, Trash2 } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import { useReadingHistory } from '@/hooks/useReadingHistory';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showBookmarksModal, setShowBookmarksModal] = useState(false);
+  const [showHistoryModal, setShowHistoryModal] = useState(false);
   const router = useRouter();
   const { bookmarks } = useBookmarks();
+  const { history, clearHistory } = useReadingHistory();
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,11 +67,25 @@ export function Header() {
               <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-text-dim" />
             </form>
 
+            {/* History Toggle Button */}
+            <button
+              onClick={() => setShowHistoryModal(true)}
+              className="relative flex h-9 w-9 items-center justify-center rounded-full bg-surface-card border border-surface-border text-text-muted hover:text-rose-soft hover:border-rose-soft/50 transition"
+              aria-label="View Reading History"
+              title="Reading History"
+            >
+              <History className="h-4 w-4" />
+              {history.length > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-2 w-2 rounded-full bg-rose-soft"></span>
+              )}
+            </button>
+
             {/* Bookmarks Toggle Button */}
             <button
               onClick={() => setShowBookmarksModal(true)}
               className="relative flex h-9 w-9 items-center justify-center rounded-full bg-surface-card border border-surface-border text-text-muted hover:text-rose-accent hover:border-rose-accent/50 transition"
               aria-label="View Saved Bookmarks"
+              title="Bookmarks"
             >
               <Bookmark className="h-4 w-4" />
               {bookmarks.length > 0 && (
@@ -99,7 +116,7 @@ export function Header() {
             <div className="mt-4 max-h-80 overflow-y-auto space-y-3">
               {bookmarks.length === 0 ? (
                 <p className="text-center text-sm text-text-dim py-8">
-                  No saved manhwa yet. Tap the bookmark icon on any title to save it locally.
+                  No saved manhwa yet. Tap &ldquo;Add to Library&rdquo; on any title to save it.
                 </p>
               ) : (
                 bookmarks.map((b) => (
@@ -116,7 +133,63 @@ export function Header() {
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-text-main group-hover:text-rose-soft truncate">{b.mangaTitle}</p>
-                      <p className="text-xs text-text-dim mt-0.5">Saved to browser</p>
+                      <p className="text-xs text-text-dim mt-0.5">Saved to browser library</p>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reading History Quick Modal */}
+      {showHistoryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl border border-surface-border bg-surface p-6 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 border-b border-surface-border">
+              <h3 className="font-serif text-lg font-bold text-text-main flex items-center gap-2">
+                <History className="w-5 h-5 text-rose-soft" /> Reading History
+              </h3>
+              <div className="flex items-center gap-3">
+                {history.length > 0 && (
+                  <button
+                    onClick={clearHistory}
+                    className="text-text-dim hover:text-rose-accent text-xs flex items-center gap-1"
+                    title="Clear All History"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> Clear
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowHistoryModal(false)}
+                  className="text-text-dim hover:text-text-main text-sm"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+            <div className="mt-4 max-h-80 overflow-y-auto space-y-3">
+              {history.length === 0 ? (
+                <p className="text-center text-sm text-text-dim py-8">
+                  No reading history recorded yet. Chapters you read will appear here.
+                </p>
+              ) : (
+                history.map((h) => (
+                  <Link
+                    key={`${h.mangaSlug}-${h.chapterNumber}`}
+                    href={`/manhwa/${h.mangaSlug}/chapter-${h.chapterNumber}`}
+                    onClick={() => setShowHistoryModal(false)}
+                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-surface-card border border-transparent hover:border-surface-border transition group"
+                  >
+                    {h.coverUrl ? (
+                      <img src={h.coverUrl} alt={h.mangaTitle} className="w-12 h-16 object-cover rounded-lg" />
+                    ) : (
+                      <div className="w-12 h-16 bg-surface-card rounded-lg flex items-center justify-center text-xs text-text-dim">Cover</div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm text-text-main group-hover:text-rose-soft truncate">{h.mangaTitle}</p>
+                      <p className="text-xs text-rose-soft font-semibold mt-0.5">Resume Chapter {h.chapterNumber}</p>
                     </div>
                   </Link>
                 ))

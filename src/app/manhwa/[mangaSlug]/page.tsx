@@ -1,13 +1,15 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { getMangaBySlug } from '@/lib/api';
+import { getMangaBySlug, getMangaList } from '@/lib/api';
+import { BookmarkButton } from '@/components/manga/BookmarkButton';
+import { MangaCard } from '@/components/manga/MangaCard';
 import {
   constructMangaMetadata,
   generateMangaJsonLd,
   generateBreadcrumbJsonLd,
 } from '@/lib/seo';
-import { BookOpen, Calendar, Clock, Bookmark, ArrowRight, User } from 'lucide-react';
+import { BookOpen, Calendar, Clock, ArrowRight, User, Sparkles } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{
@@ -45,6 +47,18 @@ export default async function MangaDetailPage({ params }: PageProps) {
     }
     notFound();
   }
+
+  // Fetch related manga by primary genre or popularity
+  let relatedManga: import('@/types/manga').MangaSummary[] = [];
+  try {
+    const genreToQuery = manga.genres && manga.genres.length > 0 ? manga.genres[0].toLowerCase() : '';
+    const relatedRes = await getMangaList({
+      genre: genreToQuery || undefined,
+      sort: 'chapters',
+      per_page: 7,
+    });
+    relatedManga = relatedRes.items.filter((m) => m.id !== manga.id).slice(0, 6);
+  } catch {}
 
   const mangaJsonLd = generateMangaJsonLd(manga);
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
@@ -114,6 +128,11 @@ export default async function MangaDetailPage({ params }: PageProps) {
                   Latest Ch.
                 </Link>
               )}
+            </div>
+
+            {/* Bookmark to Library Button */}
+            <div className="mt-3">
+              <BookmarkButton manga={manga} />
             </div>
           </div>
 
@@ -221,6 +240,25 @@ export default async function MangaDetailPage({ params }: PageProps) {
           </div>
         )}
       </div>
+
+      {/* You May Also Like Section */}
+      {relatedManga.length > 0 && (
+        <div className="space-y-4 pt-10 border-t border-surface-border/60">
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-accent/15 text-rose-accent">
+              <Sparkles className="w-4 h-4" />
+            </span>
+            <h2 className="font-serif text-2xl font-bold text-text-main">
+              You May Also Like
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {relatedManga.map((m) => (
+              <MangaCard key={m.id} manga={m} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

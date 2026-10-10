@@ -1,6 +1,6 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
-import { getChapter } from '@/lib/api';
+import { getChapter, getMangaList } from '@/lib/api';
 import {
   constructChapterMetadata,
   generateChapterJsonLd,
@@ -64,6 +64,16 @@ export default async function ChapterReaderPage({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch recommended romance manhwa for the bottom of the chapter
+  let relatedManga: import('@/types/manga').MangaSummary[] = [];
+  try {
+    const relatedRes = await getMangaList({
+      sort: 'chapters',
+      per_page: 7,
+    });
+    relatedManga = relatedRes.items.filter((m) => m.id !== chapter.manga.id).slice(0, 6);
+  } catch {}
+
   const chapterJsonLd = generateChapterJsonLd(chapter);
   const breadcrumbJsonLd = generateBreadcrumbJsonLd([
     { name: 'Home', url: '/' },
@@ -85,7 +95,7 @@ export default async function ChapterReaderPage({ params }: PageProps) {
       />
 
       {/* Reader View */}
-      <ContinuousReader chapter={chapter} />
+      <ContinuousReader chapter={chapter} relatedManga={relatedManga} />
     </div>
   );
 }
