@@ -1,0 +1,17 @@
+name = "romancetoon-frontend"
+main = ".open-next/worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Static Assets
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+
+# KV Binding for Next.js ISR cache storage
+[[kv_namespaces]]
+binding = "NEXT_CACHE_WORKERS_KV"
+id = "rt_cache_kv_placeholder"
+
+[vars]
+NEXT_PUBLIC_SITE_NAME = "RomanceToon"
+NEXT_PUBLIC_CDN_BASE_URL = "https://cdn.romancetoon.com"
+WORDPRESS_API_URL = "https://api.romancetoon.com/wp-json"

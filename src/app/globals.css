@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0B090F;
+  --foreground: #F1F0F5;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom romantic dark scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B090F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #262035;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #881337;
+}
