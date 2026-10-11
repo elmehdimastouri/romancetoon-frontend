@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface BookmarkItem {
   mangaId: number;
@@ -26,33 +26,40 @@ export function useBookmarks() {
     setIsLoaded(true);
   }, []);
 
-  const toggleBookmark = (manga: Omit<BookmarkItem, 'savedAt'>) => {
+  const toggleBookmark = useCallback((manga: Omit<BookmarkItem, 'savedAt'>) => {
     try {
-      const exists = bookmarks.some((b) => b.mangaSlug === manga.mangaSlug);
-      let updated: BookmarkItem[];
+      setBookmarks((prev) => {
+        const exists = prev.some((b) => b.mangaSlug === manga.mangaSlug);
+        let updated: BookmarkItem[];
 
-      if (exists) {
-        updated = bookmarks.filter((b) => b.mangaSlug !== manga.mangaSlug);
-      } else {
-        updated = [{ ...manga, savedAt: Date.now() }, ...bookmarks];
-      }
+        if (exists) {
+          updated = prev.filter((b) => b.mangaSlug !== manga.mangaSlug);
+        } else {
+          updated = [{ ...manga, savedAt: Date.now() }, ...prev];
+        }
 
-      setBookmarks(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
     } catch {}
-  };
+  }, []);
 
-  const removeBookmark = (slug: string) => {
+  const removeBookmark = useCallback((slug: string) => {
     try {
-      const updated = bookmarks.filter((b) => b.mangaSlug !== slug);
-      setBookmarks(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setBookmarks((prev) => {
+        const updated = prev.filter((b) => b.mangaSlug !== slug);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
     } catch {}
-  };
+  }, []);
 
-  const isBookmarked = (slug: string) => {
-    return bookmarks.some((b) => b.mangaSlug === slug);
-  };
+  const isBookmarked = useCallback(
+    (slug: string) => {
+      return bookmarks.some((b) => b.mangaSlug === slug);
+    },
+    [bookmarks]
+  );
 
   return { bookmarks, isLoaded, toggleBookmark, removeBookmark, isBookmarked };
 }

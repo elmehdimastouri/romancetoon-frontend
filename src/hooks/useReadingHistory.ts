@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export interface HistoryItem {
   mangaId: number;
@@ -30,27 +30,38 @@ export function useReadingHistory() {
     setIsLoaded(true);
   }, []);
 
-  const recordChapter = (item: Omit<HistoryItem, 'updatedAt'>) => {
+  const recordChapter = useCallback((item: Omit<HistoryItem, 'updatedAt'>) => {
     try {
-      const existing = history.filter((h) => h.mangaSlug !== item.mangaSlug);
-      const updated: HistoryItem[] = [
-        { ...item, updatedAt: Date.now() },
-        ...existing,
-      ].slice(0, MAX_HISTORY_ITEMS);
+      setHistory((prev) => {
+        // If already the top item with the exact same manga and chapter, do not re-render
+        if (
+          prev.length > 0 &&
+          prev[0].mangaSlug === item.mangaSlug &&
+          prev[0].chapterNumber === item.chapterNumber
+        ) {
+          return prev;
+        }
 
-      setHistory(updated);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        const existing = prev.filter((h) => h.mangaSlug !== item.mangaSlug);
+        const updated: HistoryItem[] = [
+          { ...item, updatedAt: Date.now() },
+          ...existing,
+        ].slice(0, MAX_HISTORY_ITEMS);
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        return updated;
+      });
     } catch {
       // Ignore storage errors
     }
-  };
+  }, []);
 
-  const clearHistory = () => {
+  const clearHistory = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
       setHistory([]);
     } catch {}
-  };
+  }, []);
 
   return { history, isLoaded, recordChapter, clearHistory };
 }
