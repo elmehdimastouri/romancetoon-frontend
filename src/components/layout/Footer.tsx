@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Bookmark, Flame, Heart, History, Sparkles } from 'lucide-react';
+import { BookOpen, Bookmark, Flame, Heart, History, Sparkles, ShieldCheck } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -79,10 +79,10 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Personal Library & History */}
+          {/* Legal & Policies */}
           <div>
             <h4 className="font-serif text-sm font-semibold text-text-main uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              <Bookmark className="w-4 h-4 text-rose-accent" /> My Library
+              <ShieldCheck className="w-4 h-4 text-rose-accent" /> Legal & Library
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -96,19 +96,38 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/manhwa?sort=title" className="hover:text-rose-soft transition">
-                  A-Z Index
+                <Link href="/dmca" className="hover:text-rose-soft transition">
+                  DMCA & Copyright Notice
                 </Link>
               </li>
               <li>
-                <span className="text-text-dim text-xs">DMCA & Policy</span>
+                <Link href="/terms" className="hover:text-rose-soft transition">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-rose-soft transition">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-rose-soft transition">
+                  Contact Us
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="mt-12 pt-8 border-t border-surface-border/60 flex flex-col sm:flex-row items-center justify-between text-xs text-text-dim gap-4">
-          <p>© {new Date().getFullYear()} RomanceToon. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-4">
+            <p>© {new Date().getFullYear()} RomanceToon. All rights reserved.</p>
+            <span className="hidden sm:inline text-surface-border">|</span>
+            <Link href="/dmca" className="hover:text-rose-soft transition">DMCA</Link>
+            <Link href="/terms" className="hover:text-rose-soft transition">Terms</Link>
+            <Link href="/privacy" className="hover:text-rose-soft transition">Privacy</Link>
+            <Link href="/contact" className="hover:text-rose-soft transition">Contact</Link>
+          </div>
           <p className="flex items-center gap-1">
             Crafted for romance & webtoon lovers with <Heart className="w-3.5 h-3.5 text-rose-accent fill-rose-accent inline" />
           </p>
