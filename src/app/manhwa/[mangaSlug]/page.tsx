@@ -10,6 +10,8 @@ import {
   generateBreadcrumbJsonLd,
 } from '@/lib/seo';
 import { BookOpen, Calendar, Clock, ArrowRight, User, Sparkles } from 'lucide-react';
+import { MangaDetail, MangaSummary } from '@/types/manga';
+import { RedirectResponse } from '@/types/api';
 
 interface PageProps {
   params: Promise<{
@@ -17,14 +19,18 @@ interface PageProps {
   }>;
 }
 
+function isRedirectResponse(data: MangaDetail | RedirectResponse): data is RedirectResponse {
+  return 'redirect' in data && data.redirect === true;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { mangaSlug } = await params;
   try {
     const data = await getMangaBySlug(mangaSlug);
-    if ('redirect' in data && data.redirect) {
+    if (isRedirectResponse(data)) {
       return {};
     }
-    return constructMangaMetadata(data as import('@/types/manga').MangaDetail);
+    return constructMangaMetadata(data);
   } catch {
     return { title: 'Manga Not Found' };
   }
@@ -33,23 +39,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function MangaDetailPage({ params }: PageProps) {
   const { mangaSlug } = await params;
 
-  let manga;
+  let result: MangaDetail | RedirectResponse;
   try {
-    const result = await getMangaBySlug(mangaSlug);
-    // Check 301 Permanent Redirect
-    if ('redirect' in result && result.redirect) {
-      permanentRedirect(result.target_url);
-    }
-    manga = result as import('@/types/manga').MangaDetail;
-  } catch (err: any) {
-    if (err?.message === 'NOT_FOUND') {
+    result = await getMangaBySlug(mangaSlug);
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message === 'NOT_FOUND') {
       notFound();
     }
-    notFound();
+    throw err;
   }
 
+  // Handle permanent redirect outside try/catch so NEXT_REDIRECT is not intercepted
+  if (isRedirectResponse(result)) {
+    permanentRedirect(result.target_url.replace(/\/+$/, '') || '/');
+  }
+
+  const manga: MangaDetail = result;
+
   // Fetch related manga by primary genre or popularity
-  let relatedManga: import('@/types/manga').MangaSummary[] = [];
+  let relatedManga: MangaSummary[] = [];
   try {
     const genreToQuery = manga.genres && manga.genres.length > 0 ? manga.genres[0].toLowerCase() : '';
     const relatedRes = await getMangaList({

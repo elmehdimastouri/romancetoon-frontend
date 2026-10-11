@@ -7,7 +7,9 @@ import {
   generateBreadcrumbJsonLd,
 } from '@/lib/seo';
 import { ContinuousReader } from '@/components/reader/ContinuousReader';
-import { ChapterSummary } from '@/types/manga';
+import { ChapterSummary, MangaDetail, MangaSummary } from '@/types/manga';
+import { ChapterDetail } from '@/types/chapter';
+import { RedirectResponse } from '@/types/api';
 
 interface PageProps {
   params: Promise<{
@@ -17,6 +19,10 @@ interface PageProps {
 }
 
 const CHAPTER_SLUG_REGEX = /^chapter-([0-9]+(?:\.[0-9]+)?)$/;
+
+function isRedirectResponse(data: ChapterDetail | RedirectResponse): data is RedirectResponse {
+  return 'redirect' in data && data.redirect === true;
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { mangaSlug, chapterSlug } = await params;
@@ -28,10 +34,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const chapterNumber = match[1];
   try {
     const data = await getChapter(mangaSlug, chapterNumber);
-    if ('redirect' in data && data.redirect) {
+    if (isRedirectResponse(data)) {
       return {};
     }
-    return constructChapterMetadata(data as import('@/types/chapter').ChapterDetail);
+    return constructChapterMetadata(data);
   } catch {
     return { title: 'Chapter Not Found' };
   }
@@ -48,34 +54,34 @@ export default async function ChapterReaderPage({ params }: PageProps) {
 
   const chapterNumber = match[1];
 
-  let chapter;
-  let allChapters: ChapterSummary[] = [];
+  let result: ChapterDetail | RedirectResponse;
+  let mangaResult: MangaDetail | RedirectResponse | null = null;
 
   try {
-    const [result, mangaResult] = await Promise.all([
+    [result, mangaResult] = await Promise.all([
       getChapter(mangaSlug, chapterNumber),
       getMangaBySlug(mangaSlug).catch(() => null),
     ]);
-
-    // 2. Check 301 Permanent Redirect
-    if ('redirect' in result && result.redirect) {
-      permanentRedirect(result.target_url);
-    }
-
-    chapter = result as import('@/types/chapter').ChapterDetail;
-
-    if (mangaResult && 'chapters' in mangaResult && Array.isArray(mangaResult.chapters)) {
-      allChapters = mangaResult.chapters;
-    }
-  } catch (err: any) {
-    if (err?.message === 'NOT_FOUND') {
+  } catch (err: unknown) {
+    if (err instanceof Error && err.message === 'NOT_FOUND') {
       notFound();
     }
-    notFound();
+    throw err;
   }
 
+  // 2. Handle permanent redirect outside try/catch so NEXT_REDIRECT is not intercepted
+  if (isRedirectResponse(result)) {
+    permanentRedirect(result.target_url.replace(/\/+$/, '') || '/');
+  }
+
+  const chapter: ChapterDetail = result;
+  const allChapters: ChapterSummary[] =
+    mangaResult && 'chapters' in mangaResult && Array.isArray(mangaResult.chapters)
+      ? mangaResult.chapters
+      : [];
+
   // Fetch recommended romance manhwa for the bottom of the chapter
-  let relatedManga: import('@/types/manga').MangaSummary[] = [];
+  let relatedManga: MangaSummary[] = [];
   try {
     const relatedRes = await getMangaList({
       sort: 'chapters',
