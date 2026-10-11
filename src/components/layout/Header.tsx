@@ -39,17 +39,17 @@ export function Header() {
 
             {/* Navigation links */}
             <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-text-muted">
-              <Link href="/manhwa" className="hover:text-text-main transition flex items-center gap-1.5">
-                <Flame className="w-4 h-4 text-rose-soft" /> Directory
+              <Link href="/manhwa" className="hover:text-text-main transition">
+                Directory
               </Link>
-              <Link href="/genre/romance" className="hover:text-text-main transition">
-                Romance
+              <Link href="/manhwa?sort=chapters" className="hover:text-text-main transition flex items-center gap-1.5">
+                <Flame className="w-4 h-4 text-rose-soft" /> Popular
               </Link>
-              <Link href="/genre/fantasy" className="hover:text-text-main transition">
-                Fantasy
+              <Link href="/library?tab=bookmarks" className="hover:text-text-main transition flex items-center gap-1.5">
+                <Bookmark className="w-4 h-4 text-rose-accent" /> Library
               </Link>
-              <Link href="/manhwa?sort=chapters" className="hover:text-text-main transition">
-                Popular
+              <Link href="/library?tab=history" className="hover:text-text-main transition flex items-center gap-1.5">
+                <History className="w-4 h-4 text-rose-soft" /> History
               </Link>
             </nav>
           </div>
