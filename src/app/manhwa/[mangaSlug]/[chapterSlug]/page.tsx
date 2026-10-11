@@ -1,12 +1,13 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
-import { getChapter, getMangaList } from '@/lib/api';
+import { getChapter, getMangaList, getMangaBySlug } from '@/lib/api';
 import {
   constructChapterMetadata,
   generateChapterJsonLd,
   generateBreadcrumbJsonLd,
 } from '@/lib/seo';
 import { ContinuousReader } from '@/components/reader/ContinuousReader';
+import { ChapterSummary } from '@/types/manga';
 
 interface PageProps {
   params: Promise<{
@@ -48,8 +49,13 @@ export default async function ChapterReaderPage({ params }: PageProps) {
   const chapterNumber = match[1];
 
   let chapter;
+  let allChapters: ChapterSummary[] = [];
+
   try {
-    const result = await getChapter(mangaSlug, chapterNumber);
+    const [result, mangaResult] = await Promise.all([
+      getChapter(mangaSlug, chapterNumber),
+      getMangaBySlug(mangaSlug).catch(() => null),
+    ]);
 
     // 2. Check 301 Permanent Redirect
     if ('redirect' in result && result.redirect) {
@@ -57,6 +63,10 @@ export default async function ChapterReaderPage({ params }: PageProps) {
     }
 
     chapter = result as import('@/types/chapter').ChapterDetail;
+
+    if (mangaResult && 'chapters' in mangaResult && Array.isArray(mangaResult.chapters)) {
+      allChapters = mangaResult.chapters;
+    }
   } catch (err: any) {
     if (err?.message === 'NOT_FOUND') {
       notFound();
@@ -94,8 +104,8 @@ export default async function ChapterReaderPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* Reader View */}
-      <ContinuousReader chapter={chapter} relatedManga={relatedManga} />
+      {/* Reader View with all chapters list passed */}
+      <ContinuousReader chapter={chapter} relatedManga={relatedManga} allChapters={allChapters} />
     </div>
   );
 }
