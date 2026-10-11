@@ -289,75 +289,75 @@ export function ContinuousReader({
       )}
 
       {/* Floating Bottom Navigation Bar (Optimized for Mobile & Desktop) */}
-      <div className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-2 rounded-full border border-surface-border/80 bg-surface/95 px-2.5 sm:px-4 py-1.5 sm:py-2 shadow-2xl shadow-black/70 backdrop-blur-xl ring-1 ring-white/10 max-w-[96vw]">
+      <div className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 rounded-full border border-surface-border/80 bg-surface/95 px-2 sm:px-3 py-1 sm:py-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl ring-1 ring-white/10 max-w-[96vw]">
         {/* Home Button */}
         <Link
           href="/"
-          className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-rose-soft active:scale-95 transition"
+          className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-rose-soft active:scale-95 transition"
           title="Return to Home"
           aria-label="Home"
         >
-          <Home className="w-4 h-4 text-rose-accent" />
+          <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-accent" />
         </Link>
 
         {/* Back to Manhwa Overview Button */}
         <Link
           href={`/manhwa/${chapter.manga.slug}`}
-          className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-rose-soft active:scale-95 transition"
+          className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-rose-soft active:scale-95 transition"
           title="Return to Manhwa Overview"
           aria-label="Manhwa Overview"
         >
-          <BookOpen className="w-4 h-4" />
+          <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </Link>
 
         {/* Separator */}
-        <div className="h-4 w-px bg-surface-border/80 mx-0.5" />
+        <div className="h-3.5 w-px bg-surface-border/80 mx-0.5" />
 
         {/* Previous Chapter */}
         {chapter.navigation.prev_chapter_slug ? (
           <Link
             href={`/manhwa/${chapter.manga.slug}/${chapter.navigation.prev_chapter_slug}`}
-            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
+            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
             title="Previous Chapter"
             aria-label="Previous Chapter"
           >
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Link>
         ) : (
-          <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center text-text-dim/30 cursor-not-allowed">
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center text-text-dim/30 cursor-not-allowed">
+            <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </span>
         )}
 
         {/* Interactive Chapter Selector Button (Opens Full Chapters List Sheet) */}
         <button
           onClick={() => setShowChapterDrawer(true)}
-          className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-surface-card hover:bg-surface-border border border-rose-accent/30 hover:border-rose-accent text-xs sm:text-sm font-bold text-text-main hover:text-rose-soft transition shadow-inner active:scale-95"
+          className="flex items-center gap-1 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-surface-card hover:bg-surface-border border border-rose-accent/30 hover:border-rose-accent text-xs font-bold text-text-main hover:text-rose-soft transition shadow-inner active:scale-95 whitespace-nowrap shrink-0"
           title="Tap to browse and jump between chapters"
           aria-label="Open Chapter Selector"
         >
-          <span>Ch. {chapter.chapter_number}</span>
-          <ChevronDown className="w-3 h-3 text-rose-accent" />
+          <span className="whitespace-nowrap">Ch. {chapter.chapter_number}</span>
+          <ChevronDown className="w-3 h-3 text-rose-accent shrink-0" />
         </button>
 
         {/* Next Chapter */}
         {chapter.navigation.next_chapter_slug ? (
           <Link
             href={`/manhwa/${chapter.manga.slug}/${chapter.navigation.next_chapter_slug}`}
-            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
+            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
             title="Next Chapter"
             aria-label="Next Chapter"
           >
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Link>
         ) : (
-          <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center text-text-dim/30 cursor-not-allowed">
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center text-text-dim/30 cursor-not-allowed">
+            <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </span>
         )}
 
         {/* Separator */}
-        <div className="h-4 w-px bg-surface-border/80 mx-0.5" />
+        <div className="h-3.5 w-px bg-surface-border/80 mx-0.5" />
 
         {/* Bookmark Button */}
         <button
@@ -369,7 +369,7 @@ export function ContinuousReader({
               coverUrl: chapter.manga.cover_url,
             })
           }
-          className={`flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full active:scale-95 transition ${
+          className={`flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full active:scale-95 transition ${
             isCurrentBookmarked
               ? 'text-rose-accent bg-rose-accent/15 ring-1 ring-rose-accent/30'
               : 'text-text-muted hover:bg-surface-card hover:text-text-main'
@@ -377,17 +377,17 @@ export function ContinuousReader({
           title={isCurrentBookmarked ? 'Bookmarked' : 'Add to Bookmarks'}
           aria-label="Bookmark this manhwa"
         >
-          <Bookmark className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isCurrentBookmarked ? 'fill-rose-accent' : ''}`} />
+          <Bookmark className={`w-3.5 h-3.5 ${isCurrentBookmarked ? 'fill-rose-accent' : ''}`} />
         </button>
 
         {/* Scroll to Top */}
         <button
           onClick={scrollToTop}
-          className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
+          className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full text-text-muted hover:bg-surface-card hover:text-text-main active:scale-95 transition"
           title="Scroll to Top"
           aria-label="Scroll to top"
         >
-          <ArrowUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <ArrowUp className="w-3.5 h-3.5" />
         </button>
       </div>
 
