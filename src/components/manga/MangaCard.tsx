@@ -25,13 +25,13 @@ export function MangaCard({ manga }: MangaCardProps) {
         )}
 
         {/* Status Badge */}
-        <span className="absolute top-2.5 left-2.5 rounded-md bg-black/75 px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase text-rose-soft backdrop-blur-sm border border-rose-soft/20">
+        <span className="absolute top-2.5 left-2.5 rounded-md bg-black/70 px-2 py-0.5 text-[11px] font-medium tracking-wide uppercase text-white backdrop-blur-sm border border-white/15">
           {manga.status}
         </span>
 
         {/* Chapters Badge */}
         {manga.chapter_count > 0 && (
-          <span className="absolute bottom-2.5 right-2.5 rounded-md bg-rose-burgundy/90 px-2 py-0.5 text-[11px] font-semibold text-rose-soft backdrop-blur-sm">
+          <span className="absolute bottom-2.5 right-2.5 rounded-md bg-rose-accent/95 px-2 py-0.5 text-[11px] font-semibold text-white shadow-sm backdrop-blur-sm">
             {manga.chapter_count} Ch
           </span>
         )}
@@ -39,7 +39,7 @@ export function MangaCard({ manga }: MangaCardProps) {
 
       {/* Details */}
       <div className="flex flex-1 flex-col p-3.5">
-        <h3 className="font-serif font-bold text-sm text-text-main group-hover:text-rose-soft transition line-clamp-1">
+        <h3 className="font-semibold text-sm text-text-main group-hover:text-rose-accent transition line-clamp-1">
           <Link href={`/manhwa/${manga.slug}`}>{manga.title}</Link>
         </h3>
 

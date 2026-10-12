@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Search, Bookmark, BookOpen, Flame, History } from 'lucide-react';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useReadingHistory } from '@/hooks/useReadingHistory';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,8 +52,8 @@ export function Header() {
           </nav>
         </div>
 
-        {/* Search bar & Direct Page Links */}
-        <div className="flex items-center gap-3">
+        {/* Search bar, Theme Toggle & Direct Page Links */}
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <form onSubmit={handleSearchSubmit} className="relative hidden sm:block w-56 lg:w-80">
             <input
               type="text"
@@ -63,6 +64,9 @@ export function Header() {
             />
             <Search className="absolute left-3.5 top-2.5 h-4 w-4 text-text-dim" />
           </form>
+
+          {/* Light / Calm Dark Theme Toggle */}
+          <ThemeToggle />
 
           {/* Direct Link to Reading History Page */}
           <Link

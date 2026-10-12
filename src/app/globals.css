@@ -2,32 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #0B090F;
-  --foreground: #F1F0F5;
+/* Default: Warm Paper Light Mode & Calm Slate Dark Mode */
+:root,
+html.light {
+  --color-background: 248 247 244;       /* #F8F7F4 - Warm Alabaster Paper */
+  --color-surface: 241 239 234;          /* #F1EFEA - Soft Warm Stone */
+  --color-surface-card: 255 255 255;     /* #FFFFFF - Clean Card Surface */
+  --color-surface-hover: 235 232 225;    /* #EBE8E1 - Gentle Hover */
+  --color-surface-border: 224 220 211;   /* #E0DCD3 - Subtle Warm Border */
+
+  --color-rose-accent: 196 58 88;        /* #C43A58 - Soft Rose Berry */
+  --color-rose-soft: 176 48 77;          /* #B0304D - Readable Warm Rose */
+  --color-rose-burgundy: 250 232 237;    /* #FAE8ED - Soft Blush Pill */
+  --color-rose-dark: 243 218 225;        /* #F3DAE1 - Muted Blush Tint */
+
+  --color-text-main: 28 31 38;           /* #1C1F26 - Soft Deep Ink */
+  --color-text-muted: 78 85 99;          /* #4E5563 - Comfortable Reading Slate */
+  --color-text-dim: 122 130 145;         /* #7A8291 - Muted Caption Gray */
+
+  --shadow-glow: 0 6px 20px -4px rgba(28, 31, 38, 0.07);
+  --shadow-glow-lg: 0 12px 30px -6px rgba(28, 31, 38, 0.11);
+}
+
+html.dark {
+  --color-background: 20 22 27;          /* #14161B - Calm Soft Slate-Charcoal (No harsh black/purple) */
+  --color-surface: 26 29 36;             /* #1A1D24 - Elevated Slate */
+  --color-surface-card: 31 35 44;        /* #1F232C - Soft Card Surface */
+  --color-surface-hover: 39 44 55;       /* #272C37 - Smooth Hover */
+  --color-surface-border: 46 52 64;      /* #2E3440 - Low-Contrast Nord Slate Border */
+
+  --color-rose-accent: 214 78 108;       /* #D64E6C - Soothing Dusty Rose (No neon glare) */
+  --color-rose-soft: 232 130 154;        /* #E8829A - Warm Pastel Rose */
+  --color-rose-burgundy: 62 31 43;       /* #3E1F2B - Muted Plum Surface */
+  --color-rose-dark: 43 24 32;           /* #2B1820 - Deep Warm Tint */
+
+  --color-text-main: 230 233 240;        /* #E6E9F0 - Eye-Friendly Soft Off-White */
+  --color-text-muted: 163 171 186;       /* #A3ABBA - Relaxed Secondary Text */
+  --color-text-dim: 112 121 138;         /* #70798A - Subtle Metadata Text */
+
+  --shadow-glow: 0 8px 24px -6px rgba(0, 0, 0, 0.32);
+  --shadow-glow-lg: 0 14px 34px -8px rgba(0, 0, 0, 0.45);
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--color-text-main));
+  background: rgb(var(--color-background));
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Custom romantic dark scrollbar */
+/* Eye-friendly custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0B090F;
+  background: rgb(var(--color-background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #262035;
+  background: rgb(var(--color-surface-border));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #881337;
+  background: rgb(var(--color-rose-accent));
 }

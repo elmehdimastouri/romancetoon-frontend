@@ -289,7 +289,7 @@ export function ContinuousReader({
       )}
 
       {/* Floating Bottom Navigation Bar (Optimized for Mobile & Desktop) */}
-      <div className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 rounded-full border border-surface-border/80 bg-surface/95 px-2 sm:px-3 py-1 sm:py-1.5 shadow-2xl shadow-black/80 backdrop-blur-xl ring-1 ring-white/10 max-w-[96vw]">
+      <div className="fixed bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 sm:gap-1.5 rounded-full border border-surface-border bg-surface/95 px-2 sm:px-3 py-1 sm:py-1.5 shadow-rose-glow-lg backdrop-blur-xl max-w-[96vw]">
         {/* Home Button */}
         <Link
           href="/"

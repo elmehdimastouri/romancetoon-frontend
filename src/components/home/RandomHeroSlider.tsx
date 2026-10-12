@@ -108,7 +108,7 @@ export function RandomHeroSlider({ initialManga }: RandomHeroSliderProps) {
 
   return (
     <section
-      className="relative overflow-hidden rounded-3xl border border-surface-border bg-surface-card/60 shadow-2xl backdrop-blur-md transition-all duration-500"
+      className="relative overflow-hidden rounded-3xl border border-surface-border bg-surface-card/85 shadow-rose-glow-lg backdrop-blur-md transition-all duration-500"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -121,9 +121,9 @@ export function RandomHeroSlider({ initialManga }: RandomHeroSliderProps) {
             src={current.cover_url}
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover blur-3xl opacity-20 scale-125 transition-opacity duration-700"
+            className="w-full h-full object-cover blur-3xl opacity-15 scale-125 transition-opacity duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/85 to-background/60" />
         </div>
       )}
 
@@ -132,7 +132,7 @@ export function RandomHeroSlider({ initialManga }: RandomHeroSliderProps) {
         {/* Cover Image */}
         <Link
           href={`/manhwa/${current.slug}`}
-          className="group relative shrink-0 block overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10 transition hover:ring-rose-accent/50"
+          className="group relative shrink-0 block overflow-hidden rounded-2xl shadow-rose-glow ring-1 ring-surface-border transition hover:ring-rose-accent/50"
         >
           {current.cover_url ? (
             <img
